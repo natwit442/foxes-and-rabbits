@@ -1,10 +1,9 @@
 package io.muzoo.ooc.ecosystems;
 
 import io.muzoo.occ.ecosystems.blueprints.Actor;
-import io.muzoo.occ.ecosystems.blueprints.Animal;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -112,6 +111,13 @@ public class SimulatorView extends JFrame {
         fieldView.repaint();
     }
 
+
+    public void printState(Field f) {
+        System.out.println(stats.getPopulationDetails(f));
+
+
+    }
+
     /**
      * Determine whether the simulation should continue to run.
      *
@@ -131,10 +137,9 @@ public class SimulatorView extends JFrame {
      */
     private class FieldView extends JPanel {
         private final int GRID_VIEW_SCALING_FACTOR = 6;
-
+        Dimension size;
         private int gridWidth, gridHeight;
         private int xScale, yScale;
-        Dimension size;
         private Graphics g;
         private Image fieldImage;
 

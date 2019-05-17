@@ -30,7 +30,6 @@ public class Tiger implements Animal {
     private static final Random rand = new Random();
 
 
-
     // The tiger's age.
     private int age;
     // Whether the tiger is alive or not.
@@ -55,7 +54,7 @@ public class Tiger implements Animal {
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
 
 
-        }else {
+        } else {
             // Leave age at 0
             foodLevel = RABBIT_FOOD_VALUE;
         }
@@ -69,7 +68,7 @@ public class Tiger implements Animal {
      *
      * @param currentField The field currently occupied.
      * @param updatedField The field to transfer to.
-     * @param newTigers     A list to add newly born tigers to.
+     * @param newTigers    A list to add newly born tigers to.
      */
     public void huntRabbitAndFox(Field currentField, Field updatedField, List<Actor> newTigers) {
         incrementAge();
@@ -138,7 +137,7 @@ public class Tiger implements Animal {
             Location where = (Location) adjacentLocations.next();
             Actor actor = field.getActorAt(where);
             boolean isRabbit = actor instanceof Rabbit;
-            boolean isFox = actor instanceof  Fox;
+            boolean isFox = actor instanceof Fox;
             if (isRabbit) {
 
                 Rabbit rabbit = (Rabbit) actor;
@@ -147,8 +146,7 @@ public class Tiger implements Animal {
                     foodLevel = RABBIT_FOOD_VALUE;
                     return where;
                 }
-            }
-            else if (isFox){
+            } else if (isFox) {
                 Fox fox = (Fox) actor;
                 if (fox.isAlive()) {
                     fox.setEaten();

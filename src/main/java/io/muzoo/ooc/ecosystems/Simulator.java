@@ -1,7 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
 import io.muzoo.occ.ecosystems.blueprints.Actor;
-import io.muzoo.occ.ecosystems.blueprints.Animal;
 
 import java.awt.*;
 import java.util.List;
@@ -96,9 +95,10 @@ public class Simulator {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
 
             simulateOneStep();
-
-
         }
+
+        view.printState(field);
+
 
     }
 
@@ -156,7 +156,7 @@ public class Simulator {
         field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                if (rand.nextDouble() <= HUNTER_CREATION_PROBABILITY){
+                if (rand.nextDouble() <= HUNTER_CREATION_PROBABILITY) {
                     Hunter hunter = new Hunter();
                     actors.add(hunter);
                     hunter.setLocation(row, col);

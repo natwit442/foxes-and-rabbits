@@ -3,8 +3,8 @@ package io.muzoo.ooc.ecosystems;
 import io.muzoo.occ.ecosystems.blueprints.Actor;
 import io.muzoo.occ.ecosystems.blueprints.Animal;
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -24,12 +24,12 @@ public class Fox implements Animal {
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.3;
+    private static final double BREEDING_PROBABILITY = 0.4;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 5;
+    private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single rabbit. In effect, this is the
     // number of steps a fox can go before it has to eat again.
-    private static final int RABBIT_FOOD_VALUE = 4;
+    private static final int RABBIT_FOOD_VALUE = 6;
     // A shared random number generator to control breeding.
     private static final Random rand = new Random();
 
@@ -66,9 +66,6 @@ public class Fox implements Animal {
     }
 
 
-
-
-
     /**
      * This is what the fox does most of the time: it hunts for
      * rabbits. In the process, it might breed, die of hunger,
@@ -99,21 +96,20 @@ public class Fox implements Animal {
     }
 
     public void moveForFoodOrDie(Field currentField, Field updatedField) {
-            // Move towards the source of food if found.
-            Location newLocation = findFood(currentField, location);
-            if (newLocation == null) {  // no food found - move randomly
-                newLocation = updatedField.freeAdjacentLocation(location);
-            }
-            if (newLocation != null) {
-                setLocation(newLocation);
-                updatedField.place(this, newLocation);
-            } else {
-                // can neither move nor stay - overcrowding - all locations taken
-                alive = false;
-            }
-
+        // Move towards the source of food if found.
+        Location newLocation = findFood(currentField, location);
+        if (newLocation == null) {  // no food found - move randomly
+            newLocation = updatedField.freeAdjacentLocation(location);
+        }
+        if (newLocation != null) {
+            setLocation(newLocation);
+            updatedField.place(this, newLocation);
+        } else {
+            // can neither move nor stay - overcrowding - all locations taken
+            alive = false;
         }
 
+    }
 
 
     /**
@@ -125,7 +121,6 @@ public class Fox implements Animal {
             alive = false;
         }
     }
-
 
 
     /**
@@ -183,7 +178,6 @@ public class Fox implements Animal {
     public void setEaten() {
         alive = false;
     }
-
 
 
     /**

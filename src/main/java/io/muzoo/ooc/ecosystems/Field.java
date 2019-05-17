@@ -1,7 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
 import io.muzoo.occ.ecosystems.blueprints.Actor;
-import io.muzoo.occ.ecosystems.blueprints.Animal;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -52,8 +51,8 @@ public class Field {
      * be lost.
      *
      * @param actor The actor to be placed.
-     * @param row    Row coordinate of the location.
-     * @param col    Column coordinate of the location.
+     * @param row   Row coordinate of the location.
+     * @param col   Column coordinate of the location.
      */
     public void place(Actor actor, int row, int col) {
         place(actor, new Location(row, col));
@@ -64,7 +63,7 @@ public class Field {
      * If there is already an actor at the location it will
      * be lost.
      *
-     * @param actor   The actor to be placed.
+     * @param actor    The actor to be placed.
      * @param location Where to place the animal.
      */
     public void place(Actor actor, Location location) {

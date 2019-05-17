@@ -1,7 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
 import io.muzoo.occ.ecosystems.blueprints.Actor;
-import io.muzoo.occ.ecosystems.blueprints.Animal;
 
 import java.util.HashMap;
 import java.util.Iterator;

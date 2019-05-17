@@ -15,7 +15,7 @@ public class Hunter implements Actor {
     // The age to which a hunter can live.
     private static final int MAX_AGE = Integer.MAX_VALUE;
     // The likelihood of a hunter breeding.
-    private static final double BREEDING_PROBABILITY = 0.7;
+    private static final double BREEDING_PROBABILITY = 0.4;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 5;
     // The food value of all Actors. In effect, this is the
@@ -26,7 +26,7 @@ public class Hunter implements Actor {
     // A shared random number generator to control breeding.
     private static final Random rand = new Random();
 
-    // Immortal! Always alive
+    // Immortal! Always alive/**/
     private static final boolean IS_ALIVE = true;
 
 
@@ -58,7 +58,7 @@ public class Hunter implements Actor {
      *
      * @param currentField The field currently occupied.
      * @param updatedField The field to transfer to.
-     * @param newHunters     A list to add newly born hunters to.
+     * @param newHunters   A list to add newly born hunters to.
      */
     public void eatAll(Field currentField, Field updatedField, List<Actor> newHunters) {
         incrementAge();
@@ -66,14 +66,14 @@ public class Hunter implements Actor {
         // New foxes are born into adjacent locations.
         int births = breed();
         for (int b = 0; b < births; b++) {
-                Hunter newHunter = new Hunter();
-                newHunters.add(newHunter);
-                Location loc = updatedField.randomAdjacentLocation(location);
-                newHunter.setLocation(loc);
-                updatedField.place(newHunter, loc);
-            }
+            Hunter newHunter = new Hunter();
+            newHunters.add(newHunter);
+            Location loc = updatedField.randomAdjacentLocation(location);
+            newHunter.setLocation(loc);
+            updatedField.place(newHunter, loc);
+        }
 
-            moveForFood(currentField, updatedField);
+        moveForFood(currentField, updatedField);
 
     }
 
@@ -129,7 +129,7 @@ public class Hunter implements Actor {
                     foodLevel = RABBIT_FOOD_VALUE;
                     return where;
                 }
-            } else if ( actor instanceof Tiger) {
+            } else if (actor instanceof Tiger) {
                 Tiger tiger = (Tiger) actor;
                 if (tiger.isAlive()) {
                     tiger.setEaten();
@@ -137,7 +137,7 @@ public class Hunter implements Actor {
                     return where;
                 }
 
-            } else if (actor instanceof Fox){
+            } else if (actor instanceof Fox) {
                 Fox fox = (Fox) actor;
                 if (fox.isAlive()) {
                     fox.setEaten();
@@ -167,8 +167,6 @@ public class Hunter implements Actor {
     }
 
 
-
-
     /**
      * A fox can breed if it has reached the breeding age.
      */
@@ -181,8 +179,6 @@ public class Hunter implements Actor {
      *
      * @return True if the fox is still alive.
      */
-
-
 
 
     /**
