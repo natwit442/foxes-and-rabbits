@@ -188,9 +188,11 @@ public class Fox implements Animal {
      *
      * @return True if the fox is still alive.
      */
+
     public boolean isAlive() {
         return alive;
     }
+
 
     /**
      * Set the animal's location.

@@ -115,6 +115,8 @@ public class Simulator {
             // It can make action according to its type
             System.out.println(animal.getClass().getSimpleName());
             animal.makeAction(field, updatedField, newAnimals);
+            if (!animal.isAlive()) iter.remove();
+
         }
         // add new born animals to the list of animals
         animals.addAll(newAnimals);
