@@ -1,11 +1,8 @@
 package io.muzoo.ooc.ecosystems;
 
-import java.util.Random;
+import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Collections;
-import java.awt.Color;
+import java.util.*;
 
 /**
  * A simple predator-prey simulator, based on a field containing
@@ -25,6 +22,8 @@ public class Simulator {
     private static final double FOX_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given grid position.
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
+    // The probability that a tifer will be created in any given grid position
+    private static final double TIGER_CREATION_PROBABILLITY = 0.1;
 
     // The list of animals in the field
     private List animals;
@@ -68,6 +67,7 @@ public class Simulator {
         view = new SimulatorView(depth, width);
         view.setColor(Fox.class, Color.blue);
         view.setColor(Rabbit.class, Color.orange);
+        view.setColor(Tiger.class, Color.black);
 
         // Setup a valid starting point.
         reset();
@@ -109,6 +109,9 @@ public class Simulator {
             } else if (animal instanceof Fox) {
                 Fox fox = (Fox) animal;
                 fox.hunt(field, updatedField, newAnimals);
+            } else if (animal instanceof Tiger) {
+                Tiger tiger = (Tiger) animal;
+                tiger.hunt(field, updatedField, newAnimals);
             } else {
                 System.out.println("found unknown animal");
             }
@@ -160,6 +163,11 @@ public class Simulator {
                     animals.add(rabbit);
                     rabbit.setLocation(row, col);
                     field.place(rabbit, row, col);
+                } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILLITY) {
+                    Tiger tiger = new Tiger(true);
+                    animals.add(tiger);
+                    tiger.setLocation(row, col);
+                    field.place(tiger , row, col);
                 }
                 // else leave the location empty.
             }
