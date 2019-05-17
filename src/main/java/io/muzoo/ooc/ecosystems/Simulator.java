@@ -1,5 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Actor;
 import io.muzoo.occ.ecosystems.blueprints.Animal;
 
 import java.awt.*;
@@ -24,13 +25,13 @@ public class Simulator {
     private static final double FOX_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given grid position.
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
-    // The probability that a tifer will be created in any given grid position
+    // The probability that a tiger will be created in any given grid position
     private static final double TIGER_CREATION_PROBABILITY = 0.1;
 
-    // The list of animals in the field
-    private List<Animal> animals;
-    // The list of animals just born
-    private List<Animal> newAnimals;
+    // The list of actor in the field
+    private List<Actor> actors;
+    // The list of actor just born
+    private List<Actor> newActors;
     // The current state of the field.
     private Field field;
     // A second field, used to build the next stage of the simulation.
@@ -60,8 +61,8 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        animals = new ArrayList<>();
-        newAnimals = new ArrayList<>();
+        actors = new ArrayList<>();
+        newActors = new ArrayList<>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
@@ -89,15 +90,12 @@ public class Simulator {
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
-            Thread t = new Thread();
-            try {
-                t.sleep(2000);
-                simulateOneStep();
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
+
+            simulateOneStep();
+
 
         }
+
     }
 
     /**
@@ -107,19 +105,17 @@ public class Simulator {
      */
     public void simulateOneStep() {
         step++;
-        newAnimals.clear();
+        newActors.clear();
 
         // Now it is a list of animal now no need to cast
-        for (Iterator<Animal> iter = animals.iterator(); iter.hasNext(); ) {
-            Animal animal = iter.next();
-            // It can make action according to its type
-            System.out.println(animal.getClass().getSimpleName());
-            animal.makeAction(field, updatedField, newAnimals);
-            if (!animal.isAlive()) iter.remove();
+        for (Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
+            Actor actor = iter.next();
+            actor.makeAction(field, updatedField, newActors);
+            if (!actor.isAlive()) iter.remove();
 
         }
         // add new born animals to the list of animals
-        animals.addAll(newAnimals);
+        actors.addAll(newActors);
 
         // Swap the field and updatedField at the end of the step.
         Field temp = field;
@@ -137,7 +133,7 @@ public class Simulator {
      */
     public void reset() {
         step = 0;
-        animals.clear();
+        actors.clear();
         field.clear();
         updatedField.clear();
         populate(field);
@@ -158,23 +154,23 @@ public class Simulator {
             for (int col = 0; col < field.getWidth(); col++) {
                 if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Fox fox = new Fox(true);
-                    animals.add(fox);
+                    actors.add(fox);
                     fox.setLocation(row, col);
                     field.place(fox, row, col);
                 } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
                     Rabbit rabbit = new Rabbit(true);
-                    animals.add(rabbit);
+                    actors.add(rabbit);
                     rabbit.setLocation(row, col);
                     field.place(rabbit, row, col);
                 } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILITY) {
                     Tiger tiger = new Tiger(true);
-                    animals.add(tiger);
+                    actors.add(tiger);
                     tiger.setLocation(row, col);
-                    field.place(tiger , row, col);
+                    field.place(tiger, row, col);
                 }
                 // else leave the location empty.
             }
         }
-        Collections.shuffle(animals);
+        Collections.shuffle(actors);
     }
 }

@@ -1,5 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Actor;
 import io.muzoo.occ.ecosystems.blueprints.Animal;
 
 import java.util.List;
@@ -77,7 +78,7 @@ public class Fox implements Animal {
      * @param updatedField The field to transfer to.
      * @param newFoxes     A list to add newly born foxes to.
      */
-    public void hunt(Field currentField, Field updatedField, List<Animal> newFoxes) {
+    public void hunt(Field currentField, Field updatedField, List<Actor> newFoxes) {
         incrementAge();
         incrementHunger();
 
@@ -214,7 +215,13 @@ public class Fox implements Animal {
     }
 
     @Override
-    public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
-      hunt(currentField, updateField, newAnimal);
+    public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
+        hunt(currentField, updateField, newActor);
+
     }
+//
+//    @Override
+//    public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
+//      hunt(currentField, updateField, newAnimal);
+//    }
 }
