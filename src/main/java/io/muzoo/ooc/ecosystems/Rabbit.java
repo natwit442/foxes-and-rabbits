@@ -1,5 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 import java.util.List;
 import java.util.Random;
 
@@ -10,7 +12,7 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kolling
  * @version 2002.10.28
  */
-public class Rabbit {
+public class Rabbit extends Animal {
     // Characteristics shared by all rabbits (static fields).
 
     // The age at which a rabbit can start to breed.
@@ -144,5 +146,10 @@ public class Rabbit {
      */
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    @Override
+    public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
+        System.out.println("make action from Rabiit class");
     }
 }
