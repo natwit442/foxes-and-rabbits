@@ -1,5 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -23,12 +25,12 @@ public class Simulator {
     // The probability that a rabbit will be created in any given grid position.
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
     // The probability that a tifer will be created in any given grid position
-    private static final double TIGER_CREATION_PROBABILLITY = 0.1;
+    private static final double TIGER_CREATION_PROBABILITY = 0.1;
 
     // The list of animals in the field
-    private List animals;
+    private List<Animal> animals;
     // The list of animals just born
-    private List newAnimals;
+    private List<Animal> newAnimals;
     // The current state of the field.
     private Field field;
     // A second field, used to build the next stage of the simulation.
@@ -58,8 +60,8 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        animals = new ArrayList();
-        newAnimals = new ArrayList();
+        animals = new ArrayList<>();
+        newAnimals = new ArrayList<>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
@@ -87,7 +89,14 @@ public class Simulator {
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
-            simulateOneStep();
+            Thread t = new Thread();
+            try {
+                t.sleep(2000);
+                simulateOneStep();
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -100,21 +109,12 @@ public class Simulator {
         step++;
         newAnimals.clear();
 
-        // let all animals act
-        for (Iterator iter = animals.iterator(); iter.hasNext(); ) {
-            Object animal = iter.next();
-            if (animal instanceof Rabbit) {
-                Rabbit rabbit = (Rabbit) animal;
-                rabbit.run(updatedField, newAnimals);
-            } else if (animal instanceof Fox) {
-                Fox fox = (Fox) animal;
-                fox.hunt(field, updatedField, newAnimals);
-            } else if (animal instanceof Tiger) {
-                Tiger tiger = (Tiger) animal;
-                tiger.hunt(field, updatedField, newAnimals);
-            } else {
-                System.out.println("found unknown animal");
-            }
+        // Now it is a list of animal now no need to cast
+        for (Iterator<Animal> iter = animals.iterator(); iter.hasNext(); ) {
+            Animal animal = iter.next();
+            // It can make action according to its type
+            System.out.println(animal.getClass().getSimpleName());
+            animal.makeAction(field, updatedField, newAnimals);
         }
         // add new born animals to the list of animals
         animals.addAll(newAnimals);
@@ -126,6 +126,7 @@ public class Simulator {
         updatedField.clear();
 
         // display the new field on screen
+
         view.showStatus(step, field);
     }
 
@@ -144,7 +145,7 @@ public class Simulator {
     }
 
     /**
-     * Populate a field with foxes and rabbits.
+     * Populate a field with foxes, rabbits and tigers.
      *
      * @param field The field to be populated.
      */
@@ -163,7 +164,7 @@ public class Simulator {
                     animals.add(rabbit);
                     rabbit.setLocation(row, col);
                     field.place(rabbit, row, col);
-                } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILLITY) {
+                } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILITY) {
                     Tiger tiger = new Tiger(true);
                     animals.add(tiger);
                     tiger.setLocation(row, col);

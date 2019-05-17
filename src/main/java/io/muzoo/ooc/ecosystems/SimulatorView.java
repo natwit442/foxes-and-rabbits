@@ -1,5 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -95,7 +97,7 @@ public class SimulatorView extends JFrame {
 
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                Object animal = field.getObjectAt(row, col);
+                Animal animal = field.getAnimalAt(row, col);
                 if (animal != null) {
                     stats.incrementCount(animal.getClass());
                     fieldView.drawMark(col, row, getColor(animal.getClass()));

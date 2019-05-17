@@ -12,7 +12,7 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kolling
  * @version 2002.10.28
  */
-public class Rabbit extends Animal {
+public class Rabbit implements Animal {
     // Characteristics shared by all rabbits (static fields).
 
     // The age at which a rabbit can start to breed.
@@ -56,7 +56,7 @@ public class Rabbit extends Animal {
      * @param updatedField The field to transfer to.
      * @param newRabbits   A list to add newly born rabbits to.
      */
-    public void run(Field updatedField, List newRabbits) {
+    public void run(Field updatedField, List<Animal> newRabbits) {
         incrementAge();
         if (alive) {
             int births = breed();
@@ -150,6 +150,6 @@ public class Rabbit extends Animal {
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
-        System.out.println("make action from Rabiit class");
+        run(updateField, newAnimal);
     }
 }

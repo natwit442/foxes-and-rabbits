@@ -1,5 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,7 +20,7 @@ public class Field {
     // The depth and width of the field.
     private int depth, width;
     // Storage for the animals.
-    private Object[][] field;
+    private Animal[][] field;
 
     /**
      * Represent a field of the given dimensions.
@@ -29,7 +31,7 @@ public class Field {
     public Field(int depth, int width) {
         this.depth = depth;
         this.width = width;
-        field = new Object[depth][width];
+        field = new Animal[depth][width];
     }
 
     /**
@@ -52,7 +54,7 @@ public class Field {
      * @param row    Row coordinate of the location.
      * @param col    Column coordinate of the location.
      */
-    public void place(Object animal, int row, int col) {
+    public void place(Animal animal, int row, int col) {
         place(animal, new Location(row, col));
     }
 
@@ -64,7 +66,7 @@ public class Field {
      * @param animal   The animal to be placed.
      * @param location Where to place the animal.
      */
-    public void place(Object animal, Location location) {
+    public void place(Animal animal, Location location) {
         field[location.getRow()][location.getCol()] = animal;
     }
 
@@ -74,8 +76,8 @@ public class Field {
      * @param location Where in the field.
      * @return The animal at the given location, or null if there is none.
      */
-    public Object getObjectAt(Location location) {
-        return getObjectAt(location.getRow(), location.getCol());
+    public Animal getAnimalAt(Location location) {
+        return getAnimalAt(location.getRow(), location.getCol());
     }
 
     /**
@@ -85,7 +87,7 @@ public class Field {
      * @param col The desired column.
      * @return The animal at the given location, or null if there is none.
      */
-    public Object getObjectAt(int row, int col) {
+    public Animal getAnimalAt(int row, int col) {
         return field[row][col];
     }
 
@@ -128,9 +130,9 @@ public class Field {
      * locations around are full.
      */
     public Location freeAdjacentLocation(Location location) {
-        Iterator adjacent = adjacentLocations(location);
+        Iterator<Location> adjacent = adjacentLocations(location);
         while (adjacent.hasNext()) {
-            Location next = (Location) adjacent.next();
+            Location next = adjacent.next();
             if (field[next.getRow()][next.getCol()] == null) {
                 return next;
             }
@@ -151,10 +153,10 @@ public class Field {
      * @param location The location from which to generate adjacencies.
      * @return An iterator over locations adjacent to that given.
      */
-    public Iterator adjacentLocations(Location location) {
+    public Iterator<Location> adjacentLocations(Location location) {
         int row = location.getRow();
         int col = location.getCol();
-        LinkedList locations = new LinkedList();
+        LinkedList<Location> locations = new LinkedList<>();
         for (int roffset = -1; roffset <= 1; roffset++) {
             int nextRow = row + roffset;
             if (nextRow >= 0 && nextRow < depth) {

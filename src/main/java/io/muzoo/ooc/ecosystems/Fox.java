@@ -13,19 +13,19 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kolling
  * @version 2002.10.28
  */
-public class Fox extends Animal {
+public class Fox implements Animal {
 
 
     // Characteristics shared by all foxes (static fields).
     // The age at which a fox can start to breed.
 
-    private static final int BREEDING_AGE = 10;
+    private static final int BREEDING_AGE = 5;
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.09;
+    private static final double BREEDING_PROBABILITY = 0.3;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 5;
     // The food value of a single rabbit. In effect, this is the
     // number of steps a fox can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 4;
@@ -77,7 +77,7 @@ public class Fox extends Animal {
      * @param updatedField The field to transfer to.
      * @param newFoxes     A list to add newly born foxes to.
      */
-    public void hunt(Field currentField, Field updatedField, List newFoxes) {
+    public void hunt(Field currentField, Field updatedField, List<Animal> newFoxes) {
         incrementAge();
         incrementHunger();
 
@@ -136,11 +136,11 @@ public class Fox extends Animal {
      * @return Where food was found, or null if it wasn't.
      */
     private Location findFood(Field field, Location location) {
-        Iterator adjacentLocations =
+        Iterator<Location> adjacentLocations =
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
-            Location where = (Location) adjacentLocations.next();
-            Object animal = field.getObjectAt(where);
+            Location where = adjacentLocations.next();
+            Animal animal = field.getAnimalAt(where);
             if (animal instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) animal;
                 if (rabbit.isAlive()) {
@@ -213,6 +213,6 @@ public class Fox extends Animal {
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
-        System.out.println("Does something");
+      hunt(currentField, updateField, newAnimal);
     }
 }

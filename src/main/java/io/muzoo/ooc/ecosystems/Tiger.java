@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Tiger extends Animal {
+public class Tiger implements Animal {
 
     // Characteristics shared by all Tiger (static fields).
 
@@ -70,7 +70,7 @@ public class Tiger extends Animal {
      * @param updatedField The field to transfer to.
      * @param newTigers     A list to add newly born tigers to.
      */
-    public void hunt(Field currentField, Field updatedField, List newTigers) {
+    public void hunt(Field currentField, Field updatedField, List<Animal> newTigers) {
         incrementAge();
         incrementHunger();
 
@@ -135,7 +135,7 @@ public class Tiger extends Animal {
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
             Location where = (Location) adjacentLocations.next();
-            Object animal = field.getObjectAt(where);
+            Animal animal = field.getAnimalAt(where);
             boolean isRabbit = animal instanceof Rabbit;
             boolean isFox = animal instanceof  Fox;
             if (isRabbit) {
@@ -220,6 +220,7 @@ public class Tiger extends Animal {
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
+        hunt(currentField, updateField, newAnimal);
 
     }
 }

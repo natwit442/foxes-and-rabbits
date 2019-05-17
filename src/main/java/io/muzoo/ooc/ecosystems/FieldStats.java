@@ -1,5 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +15,7 @@ import java.util.Iterator;
  * @version 2002.04.23
  */
 public class FieldStats {
-    // Counters for each type of entity (fox, rabbit, etc.) in the simulation.
+    // Counters for each type of entity (fox, rabbit, Tiger, etc.) in the simulation.
     private HashMap counters;
     // Whether the counters are currently up to date.
     private boolean countsValid;
@@ -112,7 +114,7 @@ public class FieldStats {
         reset();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                Object animal = field.getObjectAt(row, col);
+                Animal animal = field.getAnimalAt(row, col);
                 if (animal != null) {
                     incrementCount(animal.getClass());
                 }
