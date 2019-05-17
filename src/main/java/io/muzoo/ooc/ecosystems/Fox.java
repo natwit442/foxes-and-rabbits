@@ -1,5 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
@@ -11,10 +13,12 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kolling
  * @version 2002.10.28
  */
-public class Fox {
-    // Characteristics shared by all foxes (static fields).
+public class Fox extends Animal {
 
+
+    // Characteristics shared by all foxes (static fields).
     // The age at which a fox can start to breed.
+
     private static final int BREEDING_AGE = 10;
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
@@ -29,6 +33,7 @@ public class Fox {
     private static final Random rand = new Random();
 
     // Individual characteristics (instance fields).
+
 
     // The fox's age.
     private int age;
@@ -45,6 +50,8 @@ public class Fox {
      *
      * @param randomAge If true, the fox will have random age and hunger level.
      */
+
+
     public Fox(boolean randomAge) {
         age = 0;
         alive = true;
@@ -56,6 +63,10 @@ public class Fox {
             foodLevel = RABBIT_FOOD_VALUE;
         }
     }
+
+
+
+
 
     /**
      * This is what the fox does most of the time: it hunts for
@@ -69,6 +80,7 @@ public class Fox {
     public void hunt(Field currentField, Field updatedField, List newFoxes) {
         incrementAge();
         incrementHunger();
+
         if (alive) {
             // New foxes are born into adjacent locations.
             int births = breed();
@@ -103,6 +115,8 @@ public class Fox {
             alive = false;
         }
     }
+
+
 
     /**
      * Make this fox more hungry. This could result in the fox's death.
@@ -186,5 +200,10 @@ public class Fox {
      */
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    @Override
+    public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
+        System.out.println("Does something");
     }
 }
