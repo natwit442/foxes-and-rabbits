@@ -5,10 +5,11 @@ import io.muzoo.ooc.ecosystems.Field;
 import java.util.List;
 
 
-public abstract class Animal {
+public interface Animal {
 
+    boolean isAlive();
 
-    abstract public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal);
+    void makeAction(Field currentField, Field updateField, List<Animal> newAnimal);
 
 
 }
