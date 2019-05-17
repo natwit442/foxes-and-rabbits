@@ -71,7 +71,7 @@ public class Tiger implements Animal {
      * @param updatedField The field to transfer to.
      * @param newTigers     A list to add newly born tigers to.
      */
-    public void hunt(Field currentField, Field updatedField, List<Actor> newTigers) {
+    public void huntRabbitAndFox(Field currentField, Field updatedField, List<Actor> newTigers) {
         incrementAge();
         incrementHunger();
 
@@ -136,12 +136,12 @@ public class Tiger implements Animal {
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
             Location where = (Location) adjacentLocations.next();
-            Animal animal = field.getAnimalAt(where);
-            boolean isRabbit = animal instanceof Rabbit;
-            boolean isFox = animal instanceof  Fox;
+            Actor actor = field.getActorAt(where);
+            boolean isRabbit = actor instanceof Rabbit;
+            boolean isFox = actor instanceof  Fox;
             if (isRabbit) {
 
-                Rabbit rabbit = (Rabbit) animal;
+                Rabbit rabbit = (Rabbit) actor;
                 if (rabbit.isAlive()) {
                     rabbit.setEaten();
                     foodLevel = RABBIT_FOOD_VALUE;
@@ -149,7 +149,7 @@ public class Tiger implements Animal {
                 }
             }
             else if (isFox){
-                Fox fox = (Fox) animal;
+                Fox fox = (Fox) actor;
                 if (fox.isAlive()) {
                     fox.setEaten();
                     foodLevel = FOX_FOOD_VALUE;
@@ -194,6 +194,15 @@ public class Tiger implements Animal {
         return alive;
     }
 
+
+    /**
+     * Tell the tiger that it's dead now :(
+     */
+    public void setEaten() {
+        alive = false;
+    }
+
+
     /**
      * Set the animal's location.
      *
@@ -216,7 +225,7 @@ public class Tiger implements Animal {
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
-        hunt(currentField, updateField, newActor);
+        huntRabbitAndFox(currentField, updateField, newActor);
     }
 }
 

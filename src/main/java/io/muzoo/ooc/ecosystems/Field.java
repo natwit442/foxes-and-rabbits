@@ -1,5 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
+import io.muzoo.occ.ecosystems.blueprints.Actor;
 import io.muzoo.occ.ecosystems.blueprints.Animal;
 
 import java.util.Collections;
@@ -20,7 +21,7 @@ public class Field {
     // The depth and width of the field.
     private int depth, width;
     // Storage for the animals.
-    private Animal[][] field;
+    private Actor[][] field;
 
     /**
      * Represent a field of the given dimensions.
@@ -31,7 +32,7 @@ public class Field {
     public Field(int depth, int width) {
         this.depth = depth;
         this.width = width;
-        field = new Animal[depth][width];
+        field = new Actor[depth][width];
     }
 
     /**
@@ -50,34 +51,34 @@ public class Field {
      * If there is already an animal at the location it will
      * be lost.
      *
-     * @param animal The animal to be placed.
+     * @param actor The actor to be placed.
      * @param row    Row coordinate of the location.
      * @param col    Column coordinate of the location.
      */
-    public void place(Animal animal, int row, int col) {
-        place(animal, new Location(row, col));
+    public void place(Actor actor, int row, int col) {
+        place(actor, new Location(row, col));
     }
 
     /**
-     * Place an animal at the given location.
-     * If there is already an animal at the location it will
+     * Place an actor at the given location.
+     * If there is already an actor at the location it will
      * be lost.
      *
-     * @param animal   The animal to be placed.
+     * @param actor   The actor to be placed.
      * @param location Where to place the animal.
      */
-    public void place(Animal animal, Location location) {
-        field[location.getRow()][location.getCol()] = animal;
+    public void place(Actor actor, Location location) {
+        field[location.getRow()][location.getCol()] = actor;
     }
 
     /**
-     * Return the animal at the given location, if any.
+     * Return the actor at the given location, if any.
      *
      * @param location Where in the field.
-     * @return The animal at the given location, or null if there is none.
+     * @return The actor at the given location, or null if there is none.
      */
-    public Animal getAnimalAt(Location location) {
-        return getAnimalAt(location.getRow(), location.getCol());
+    public Actor getActorAt(Location location) {
+        return getActorAt(location.getRow(), location.getCol());
     }
 
     /**
@@ -87,7 +88,7 @@ public class Field {
      * @param col The desired column.
      * @return The animal at the given location, or null if there is none.
      */
-    public Animal getAnimalAt(int row, int col) {
+    public Actor getActorAt(int row, int col) {
         return field[row][col];
     }
 

@@ -22,11 +22,14 @@ public class Simulator {
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 50;
     // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.02;
+    private static final double FOX_CREATION_PROBABILITY = 0.06;
     // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;
+    private static final double RABBIT_CREATION_PROBABILITY = 0.2;
     // The probability that a tiger will be created in any given grid position
     private static final double TIGER_CREATION_PROBABILITY = 0.1;
+
+    // The probability that a tiger will be created in any given grid position
+    private static final double HUNTER_CREATION_PROBABILITY = 0.0001;
 
     // The list of actor in the field
     private List<Actor> actors;
@@ -71,6 +74,7 @@ public class Simulator {
         view.setColor(Fox.class, Color.blue);
         view.setColor(Rabbit.class, Color.orange);
         view.setColor(Tiger.class, Color.black);
+        view.setColor(Hunter.class, Color.RED);
 
         // Setup a valid starting point.
         reset();
@@ -152,6 +156,17 @@ public class Simulator {
         field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
+                if (rand.nextDouble() <= HUNTER_CREATION_PROBABILITY){
+                    Hunter hunter = new Hunter();
+                    actors.add(hunter);
+                    hunter.setLocation(row, col);
+                    field.place(hunter, row, col);
+                } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILITY) {
+                    Tiger tiger = new Tiger(true);
+                    actors.add(tiger);
+                    tiger.setLocation(row, col);
+                    field.place(tiger, row, col);
+                }
                 if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Fox fox = new Fox(true);
                     actors.add(fox);
@@ -162,11 +177,6 @@ public class Simulator {
                     actors.add(rabbit);
                     rabbit.setLocation(row, col);
                     field.place(rabbit, row, col);
-                } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILITY) {
-                    Tiger tiger = new Tiger(true);
-                    actors.add(tiger);
-                    tiger.setLocation(row, col);
-                    field.place(tiger, row, col);
                 }
                 // else leave the location empty.
             }

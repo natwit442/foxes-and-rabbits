@@ -78,7 +78,7 @@ public class Fox implements Animal {
      * @param updatedField The field to transfer to.
      * @param newFoxes     A list to add newly born foxes to.
      */
-    public void hunt(Field currentField, Field updatedField, List<Actor> newFoxes) {
+    public void huntRabbit(Field currentField, Field updatedField, List<Actor> newFoxes) {
         incrementAge();
         incrementHunger();
 
@@ -92,6 +92,13 @@ public class Fox implements Animal {
                 newFox.setLocation(loc);
                 updatedField.place(newFox, loc);
             }
+
+            moveForFoodOrDie(currentField, updatedField);
+
+        }
+    }
+
+    public void moveForFoodOrDie(Field currentField, Field updatedField) {
             // Move towards the source of food if found.
             Location newLocation = findFood(currentField, location);
             if (newLocation == null) {  // no food found - move randomly
@@ -104,8 +111,10 @@ public class Fox implements Animal {
                 // can neither move nor stay - overcrowding - all locations taken
                 alive = false;
             }
+
         }
-    }
+
+
 
     /**
      * Increase the age. This could result in the fox's death.
@@ -141,9 +150,9 @@ public class Fox implements Animal {
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
             Location where = adjacentLocations.next();
-            Animal animal = field.getAnimalAt(where);
-            if (animal instanceof Rabbit) {
-                Rabbit rabbit = (Rabbit) animal;
+            Actor actor = field.getActorAt(where);
+            if (actor instanceof Rabbit) {
+                Rabbit rabbit = (Rabbit) actor;
                 if (rabbit.isAlive()) {
                     rabbit.setEaten();
                     foodLevel = RABBIT_FOOD_VALUE;
@@ -216,12 +225,8 @@ public class Fox implements Animal {
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
-        hunt(currentField, updateField, newActor);
+        huntRabbit(currentField, updateField, newActor);
 
     }
-//
-//    @Override
-//    public void makeAction(Field currentField, Field updateField, List<Animal> newAnimal) {
-//      hunt(currentField, updateField, newAnimal);
-//    }
+
 }
