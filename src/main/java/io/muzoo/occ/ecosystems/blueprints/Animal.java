@@ -1,6 +1,10 @@
 package io.muzoo.occ.ecosystems.blueprints;
 
 
-public interface Animal extends Actor {
+import io.muzoo.ooc.ecosystems.Actor;
+
+public abstract class Animal extends Actor {
+
+
 
 }

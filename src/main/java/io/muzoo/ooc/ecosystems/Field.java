@@ -1,7 +1,5 @@
 package io.muzoo.ooc.ecosystems;
 
-import io.muzoo.occ.ecosystems.blueprints.Actor;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;

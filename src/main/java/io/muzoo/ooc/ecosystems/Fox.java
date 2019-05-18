@@ -1,7 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
-import io.muzoo.occ.ecosystems.blueprints.Actor;
-import io.muzoo.occ.ecosystems.blueprints.Animal;
+
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.Random;
  * @author David J. Barnes and Michael Kolling
  * @version 2002.10.28
  */
-public class Fox implements Animal {
+public class Fox extends Predator {
 
 
     // Characteristics shared by all foxes (static fields).
@@ -24,9 +23,9 @@ public class Fox implements Animal {
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.4;
+    private static final double BREEDING_PROBABILITY = 0.5;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
+    private static final int MAX_LITTER_SIZE = 7;
     // The food value of a single rabbit. In effect, this is the
     // number of steps a fox can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 6;
@@ -38,12 +37,15 @@ public class Fox implements Animal {
 
     // The fox's age.
     private int age;
-    // Whether the fox is alive or not.
-    private boolean alive;
-    // The fox's position
-    private Location location;
+
     // The fox's food level, which is increased by eating rabbits.
     private int foodLevel;
+
+    public Fox() {
+        super();
+        age= 0;
+
+    }
 
     /**
      * Create a fox. A fox can be created as a new born (age zero
@@ -53,9 +55,9 @@ public class Fox implements Animal {
      */
 
 
+
     public Fox(boolean randomAge) {
         age = 0;
-        alive = true;
         if (randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
@@ -66,50 +68,7 @@ public class Fox implements Animal {
     }
 
 
-    /**
-     * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
-     * or die of old age.
-     *
-     * @param currentField The field currently occupied.
-     * @param updatedField The field to transfer to.
-     * @param newFoxes     A list to add newly born foxes to.
-     */
-    public void huntRabbit(Field currentField, Field updatedField, List<Actor> newFoxes) {
-        incrementAge();
-        incrementHunger();
 
-        if (alive) {
-            // New foxes are born into adjacent locations.
-            int births = breed();
-            for (int b = 0; b < births; b++) {
-                Fox newFox = new Fox(false);
-                newFoxes.add(newFox);
-                Location loc = updatedField.randomAdjacentLocation(location);
-                newFox.setLocation(loc);
-                updatedField.place(newFox, loc);
-            }
-
-            moveForFoodOrDie(currentField, updatedField);
-
-        }
-    }
-
-    public void moveForFoodOrDie(Field currentField, Field updatedField) {
-        // Move towards the source of food if found.
-        Location newLocation = findFood(currentField, location);
-        if (newLocation == null) {  // no food found - move randomly
-            newLocation = updatedField.freeAdjacentLocation(location);
-        }
-        if (newLocation != null) {
-            setLocation(newLocation);
-            updatedField.place(this, newLocation);
-        } else {
-            // can neither move nor stay - overcrowding - all locations taken
-            alive = false;
-        }
-
-    }
 
 
     /**
@@ -118,7 +77,7 @@ public class Fox implements Animal {
     private void incrementAge() {
         age++;
         if (age > MAX_AGE) {
-            alive = false;
+            setAlive(false);
         }
     }
 
@@ -129,7 +88,8 @@ public class Fox implements Animal {
     private void incrementHunger() {
         foodLevel--;
         if (foodLevel <= 0) {
-            alive = false;
+
+            setAlive(false);
         }
     }
 
@@ -140,16 +100,17 @@ public class Fox implements Animal {
      * @param location Where in the field it is located.
      * @return Where food was found, or null if it wasn't.
      */
-    private Location findFood(Field field, Location location) {
+    protected Location findFood(Field field, Location location) {
         Iterator<Location> adjacentLocations =
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
             Location where = adjacentLocations.next();
             Actor actor = field.getActorAt(where);
+
             if (actor instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) actor;
                 if (rabbit.isAlive()) {
-                    rabbit.setEaten();
+                    rabbit.setDead();
                     foodLevel = RABBIT_FOOD_VALUE;
                     return where;
                 }
@@ -164,7 +125,7 @@ public class Fox implements Animal {
      *
      * @return The number of births (may be zero).
      */
-    private int breed() {
+    protected int breed() {
         int births = 0;
         if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
             births = rand.nextInt(MAX_LITTER_SIZE) + 1;
@@ -172,12 +133,7 @@ public class Fox implements Animal {
         return births;
     }
 
-    /**
-     * Tell the fox that it's dead now :(
-     */
-    public void setEaten() {
-        alive = false;
-    }
+
 
 
     /**
@@ -193,33 +149,13 @@ public class Fox implements Animal {
      * @return True if the fox is still alive.
      */
 
-    public boolean isAlive() {
-        return alive;
-    }
 
-
-    /**
-     * Set the animal's location.
-     *
-     * @param row The vertical coordinate of the location.
-     * @param col The horizontal coordinate of the location.
-     */
-    public void setLocation(int row, int col) {
-        this.location = new Location(row, col);
-    }
-
-    /**
-     * Set the fox's location.
-     *
-     * @param location The fox's location.
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
-        huntRabbit(currentField, updateField, newActor);
+        incrementAge();
+        incrementHunger();
+        hunt(currentField, updateField, newActor);
 
     }
 

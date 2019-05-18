@@ -1,12 +1,10 @@
 package io.muzoo.ooc.ecosystems;
 
-import io.muzoo.occ.ecosystems.blueprints.Actor;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Hunter implements Actor {
+public class Hunter extends Predator {
     // This hunter is immortal;
     // Characteristics shared by all hunters (static fields).
     // The age at which a fox can start to breed.
@@ -27,15 +25,12 @@ public class Hunter implements Actor {
     private static final Random rand = new Random();
 
     // Immortal! Always alive/**/
-    private static final boolean IS_ALIVE = true;
 
 
     // Individual characteristics (instance fields).
 
     // The hunters's age.
     private int age;
-    // The hunter's position
-    private Location location;
     // The hunter's food level, which is increased by eating others.
     private int foodLevel;
 
@@ -48,46 +43,6 @@ public class Hunter implements Actor {
     public Hunter() {
         age = 0;
         foodLevel = RABBIT_FOOD_VALUE + TIGER_FOOD_VALUE + FOX_FOOD_VALUE;
-    }
-
-
-    /**
-     * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
-     * or die of old age.
-     *
-     * @param currentField The field currently occupied.
-     * @param updatedField The field to transfer to.
-     * @param newHunters   A list to add newly born hunters to.
-     */
-    public void eatAll(Field currentField, Field updatedField, List<Actor> newHunters) {
-        incrementAge();
-        incrementHunger();
-        // New foxes are born into adjacent locations.
-        int births = breed();
-        for (int b = 0; b < births; b++) {
-            Hunter newHunter = new Hunter();
-            newHunters.add(newHunter);
-            Location loc = updatedField.randomAdjacentLocation(location);
-            newHunter.setLocation(loc);
-            updatedField.place(newHunter, loc);
-        }
-
-        moveForFood(currentField, updatedField);
-
-    }
-
-    public void moveForFood(Field currentField, Field updatedField) {
-        // Move towards the source of food if found.
-        Location newLocation = findFood(currentField, location);
-        if (newLocation == null) {  // no food found - move randomly
-            newLocation = updatedField.freeAdjacentLocation(location);
-        }
-        if (newLocation != null) {
-            setLocation(newLocation);
-            updatedField.place(this, newLocation);
-        }
-
     }
 
 
@@ -116,7 +71,9 @@ public class Hunter implements Actor {
      * @param location Where in the field it is located.
      * @return Where food was found, or null if it wasn't.
      */
-    private Location findFood(Field field, Location location) {
+    protected Location findFood(Field field, Location location) {
+
+
         Iterator<Location> adjacentLocations =
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
@@ -125,14 +82,14 @@ public class Hunter implements Actor {
             if (actor instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) actor;
                 if (rabbit.isAlive()) {
-                    rabbit.setEaten();
+                    rabbit.setDead();
                     foodLevel = RABBIT_FOOD_VALUE;
                     return where;
                 }
             } else if (actor instanceof Tiger) {
                 Tiger tiger = (Tiger) actor;
                 if (tiger.isAlive()) {
-                    tiger.setEaten();
+                    tiger.setDead();
                     foodLevel = TIGER_FOOD_VALUE;
                     return where;
                 }
@@ -140,7 +97,7 @@ public class Hunter implements Actor {
             } else if (actor instanceof Fox) {
                 Fox fox = (Fox) actor;
                 if (fox.isAlive()) {
-                    fox.setEaten();
+                    fox.setDead();
                     foodLevel = FOX_FOOD_VALUE;
                     return where;
                 }
@@ -158,7 +115,7 @@ public class Hunter implements Actor {
      *
      * @return The number of births (may be zero).
      */
-    private int breed() {
+    protected int breed() {
         int births = 0;
         if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
             births = rand.nextInt(MAX_LITTER_SIZE) + 1;
@@ -181,26 +138,6 @@ public class Hunter implements Actor {
      */
 
 
-    /**
-     * Set the animal's location.
-     *
-     * @param row The vertical coordinate of the location.
-     * @param col The horizontal coordinate of the location.
-     */
-    public void setLocation(int row, int col) {
-        this.location = new Location(row, col);
-    }
-
-    /**
-     * Set the fox's location.
-     *
-     * @param location The fox's location.
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-
     @Override
     public boolean isAlive() {
         return true;
@@ -208,7 +145,9 @@ public class Hunter implements Actor {
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
-        eatAll(currentField, updateField, newActor);
+        incrementAge();
+        incrementHunger();
+        hunt(currentField, updateField, newActor);
 
     }
 }

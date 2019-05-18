@@ -1,7 +1,5 @@
 package io.muzoo.ooc.ecosystems;
 
-import io.muzoo.occ.ecosystems.blueprints.Actor;
-
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -17,9 +15,9 @@ public class Simulator {
     // The private static final variables represent 
     // configuration information for the simulation.
     // The default width for the grid.
-    private static final int DEFAULT_WIDTH = 50;
+    private static final int DEFAULT_WIDTH = 10;
     // The default depth of the grid.
-    private static final int DEFAULT_DEPTH = 50;
+    private static final int DEFAULT_DEPTH = 10;
     // The probability that a fox will be created in any given grid position.
     private static final double FOX_CREATION_PROBABILITY = 0.06;
     // The probability that a rabbit will be created in any given grid position.
@@ -28,7 +26,7 @@ public class Simulator {
     private static final double TIGER_CREATION_PROBABILITY = 0.1;
 
     // The probability that a tiger will be created in any given grid position
-    private static final double HUNTER_CREATION_PROBABILITY = 0.0001;
+    private static final double HUNTER_CREATION_PROBABILITY = 0.001;
 
     // The list of actor in the field
     private List<Actor> actors;
@@ -114,6 +112,7 @@ public class Simulator {
         // Now it is a list of animal now no need to cast
         for (Iterator<Actor> iter = actors.iterator(); iter.hasNext(); ) {
             Actor actor = iter.next();
+
             actor.makeAction(field, updatedField, newActors);
             if (!actor.isAlive()) iter.remove();
 
@@ -167,7 +166,7 @@ public class Simulator {
                     tiger.setLocation(row, col);
                     field.place(tiger, row, col);
                 }
-                if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
+                else if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Fox fox = new Fox(true);
                     actors.add(fox);
                     fox.setLocation(row, col);
@@ -178,7 +177,12 @@ public class Simulator {
                     rabbit.setLocation(row, col);
                     field.place(rabbit, row, col);
                 }
+                else {
+
+                }
                 // else leave the location empty.
+
+
             }
         }
         Collections.shuffle(actors);

@@ -1,13 +1,10 @@
 package io.muzoo.ooc.ecosystems;
 
-import io.muzoo.occ.ecosystems.blueprints.Actor;
-import io.muzoo.occ.ecosystems.blueprints.Animal;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Tiger implements Animal {
+public class Tiger extends Predator {
 
     // Characteristics shared by all Tiger (static fields).
 
@@ -32,13 +29,14 @@ public class Tiger implements Animal {
 
     // The tiger's age.
     private int age;
-    // Whether the tiger is alive or not.
-    private boolean alive;
-    // The tiger's position
-    private Location location;
+
     // The tiger's food level, which is increased by eating foxes or rabbits.
     private int foodLevel;
 
+    public Tiger() {
+        super();
+        age =0;
+    }
 
     /**
      * Create a tiger. A tiger can be created as a new born (age zero
@@ -48,7 +46,6 @@ public class Tiger implements Animal {
      */
     public Tiger(boolean randomAge) {
         age = 0;
-        alive = true;
         if (randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
@@ -61,44 +58,6 @@ public class Tiger implements Animal {
     }
 
 
-    /**
-     * This is what the tiger does most of the time: it hunts for
-     * rabbits or foxes. In the process, it might breed, die of hunger,
-     * or die of old age.
-     *
-     * @param currentField The field currently occupied.
-     * @param updatedField The field to transfer to.
-     * @param newTigers    A list to add newly born tigers to.
-     */
-    public void huntRabbitAndFox(Field currentField, Field updatedField, List<Actor> newTigers) {
-        incrementAge();
-        incrementHunger();
-
-        if (isAlive()) {
-            // New tigers are born into adjacent locations.
-            int births = breed();
-            for (int b = 0; b < births; b++) {
-                Tiger newTiger = new Tiger(false);
-                newTigers.add(newTiger);
-                Location loc = updatedField.randomAdjacentLocation(location);
-                newTiger.setLocation(loc);
-                updatedField.place(newTiger, loc);
-            }
-
-            // Move towards the source of food if found.
-            Location newLocation = findFood(currentField, location);
-            if (newLocation == null) {  // no food found - move randomly
-                newLocation = updatedField.freeAdjacentLocation(location);
-            }
-            if (newLocation != null) {
-                setLocation(newLocation);
-                updatedField.place(this, newLocation);
-            } else {
-                // can neither move nor stay - overcrowding - all locations taken
-                alive = false;
-            }
-        }
-    }
 
 
     /**
@@ -107,7 +66,7 @@ public class Tiger implements Animal {
     private void incrementAge() {
         age++;
         if (age > MAX_AGE) {
-            alive = false;
+            setAlive(false);
         }
     }
 
@@ -118,7 +77,7 @@ public class Tiger implements Animal {
     private void incrementHunger() {
         foodLevel--;
         if (foodLevel <= 0) {
-            alive = false;
+            setAlive(false);
         }
     }
 
@@ -130,7 +89,7 @@ public class Tiger implements Animal {
      * @param location Where in the field it is located.
      * @return Where food was found, or null if it wasn't.
      */
-    private Location findFood(Field field, Location location) {
+    protected Location findFood(Field field, Location location) {
         Iterator adjacentLocations =
                 field.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
@@ -142,14 +101,14 @@ public class Tiger implements Animal {
 
                 Rabbit rabbit = (Rabbit) actor;
                 if (rabbit.isAlive()) {
-                    rabbit.setEaten();
+                    rabbit.setDead();
                     foodLevel = RABBIT_FOOD_VALUE;
                     return where;
                 }
             } else if (isFox) {
                 Fox fox = (Fox) actor;
                 if (fox.isAlive()) {
-                    fox.setEaten();
+                    fox.setDead();
                     foodLevel = FOX_FOOD_VALUE;
                     return where;
                 }
@@ -167,7 +126,7 @@ public class Tiger implements Animal {
      *
      * @return The number of births (may be zero).
      */
-    private int breed() {
+    protected int breed() {
         int births = 0;
         if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
             births = rand.nextInt(MAX_LITTER_SIZE) + 1;
@@ -183,47 +142,11 @@ public class Tiger implements Animal {
         return age >= BREEDING_AGE;
     }
 
-    /**
-     * Check whether the fox is alive or not.
-     *
-     * @return True if the fox is still alive.
-     */
-    public boolean isAlive() {
-        return alive;
-    }
-
-
-    /**
-     * Tell the tiger that it's dead now :(
-     */
-    public void setEaten() {
-        alive = false;
-    }
-
-
-    /**
-     * Set the animal's location.
-     *
-     * @param row The vertical coordinate of the location.
-     * @param col The horizontal coordinate of the location.
-     */
-    public void setLocation(int row, int col) {
-        this.location = new Location(row, col);
-    }
-
-    /**
-     * Set the fox's location.
-     *
-     * @param location The fox's location.
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-
     @Override
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
-        huntRabbitAndFox(currentField, updateField, newActor);
+        incrementAge();
+        incrementHunger();
+        hunt(currentField, updateField, newActor);
     }
 }
 

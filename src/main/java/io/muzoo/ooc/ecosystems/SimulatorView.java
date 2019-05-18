@@ -1,7 +1,5 @@
 package io.muzoo.ooc.ecosystems;
 
-import io.muzoo.occ.ecosystems.blueprints.Actor;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
