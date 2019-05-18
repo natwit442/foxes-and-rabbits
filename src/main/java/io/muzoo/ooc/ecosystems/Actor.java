@@ -3,12 +3,7 @@ package io.muzoo.ooc.ecosystems;
 import java.util.List;
 
 public abstract class Actor {
-
-
-
-
     private boolean alive;
-
     private Location location;
 
 
