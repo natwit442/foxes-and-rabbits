@@ -1,10 +1,12 @@
 package io.muzoo.ooc.ecosystems;
 
+import java.beans.FeatureDescriptor;
 import java.util.List;
 
 public abstract class Actor {
     private boolean alive;
     private Location location;
+    private Field field;
 
 
     public Actor() {
@@ -13,10 +15,23 @@ public abstract class Actor {
 
     }
 
+    public Actor(Location location, Field field) {
+        alive = true;
+        this.location = location;
+        this.field = field;
+    }
+
     public Location getLocation() {
         return location;
     }
 
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
 
     public void setAlive(boolean alive) {
         this.alive = alive;

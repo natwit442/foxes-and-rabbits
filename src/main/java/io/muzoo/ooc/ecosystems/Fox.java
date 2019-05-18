@@ -41,11 +41,7 @@ public class Fox extends Predator {
     // The fox's food level, which is increased by eating rabbits.
     private int foodLevel;
 
-    public Fox() {
-        super();
-        age= 0;
 
-    }
 
     /**
      * Create a fox. A fox can be created as a new born (age zero
@@ -56,7 +52,8 @@ public class Fox extends Predator {
 
 
 
-    public Fox(boolean randomAge) {
+    public Fox(boolean randomAge, Field field , Location location) {
+        super(location, field);
         age = 0;
         if (randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -134,6 +131,19 @@ public class Fox extends Predator {
     }
 
 
+    @Override
+    public void giveBirth(Field updatedField, List<Actor> newPredators) {
+        int births = breed();
+        for (int b = 0; b < births; b++) {
+            Location loc = updatedField.randomAdjacentLocation(getLocation());
+            Actor newFox = new Fox(false, getField(), loc);
+            newPredators.add(newFox);
+            updatedField.place(this, loc);
+        }
+    }
+
+
+
 
 
     /**
@@ -155,7 +165,7 @@ public class Fox extends Predator {
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
         incrementAge();
         incrementHunger();
-        hunt(currentField, updateField, newActor);
+        hunt(updateField, newActor);
 
     }
 

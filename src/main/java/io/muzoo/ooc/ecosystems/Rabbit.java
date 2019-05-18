@@ -36,7 +36,8 @@ public class Rabbit extends Animal {
      *
      * @param randomAge If true, the rabbit will have a random age.
      */
-    public Rabbit(boolean randomAge) {
+    public Rabbit(boolean randomAge, Field field, Location location) {
+        super(location, field);
         age = 0;
 
         if (randomAge) {
@@ -56,10 +57,9 @@ public class Rabbit extends Animal {
         if (isAlive()) {
             int births = breed();
             for (int b = 0; b < births; b++) {
-                Rabbit newRabbit = new Rabbit(false);
-                newRabbits.add(newRabbit);
                 Location loc = updatedField.randomAdjacentLocation(getLocation());
-                newRabbit.setLocation(loc);
+                Rabbit newRabbit = new Rabbit(false, getField(), loc);
+                newRabbits.add(newRabbit);
                 updatedField.place(newRabbit, loc);
             }
             Location newLocation = updatedField.freeAdjacentLocation(getLocation());
@@ -69,7 +69,7 @@ public class Rabbit extends Animal {
                 updatedField.place(this, newLocation);
             } else {
                 // can neither move nor stay - overcrowding - all locations taken
-                setAlive(false);
+                setDead();
             }
         }
     }

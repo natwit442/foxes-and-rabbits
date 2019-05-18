@@ -40,7 +40,8 @@ public class Hunter extends Predator {
      */
 
 
-    public Hunter() {
+    public Hunter(Field field, Location location) {
+        super(location, field);
         age = 0;
         foodLevel = RABBIT_FOOD_VALUE + TIGER_FOOD_VALUE + FOX_FOOD_VALUE;
     }
@@ -124,6 +125,21 @@ public class Hunter extends Predator {
     }
 
 
+    @Override
+    public void giveBirth(Field updatedField, List<Actor> newPredators) {
+        int births = breed();
+        for (int b = 0; b < births; b++) {
+
+
+            Location loc = updatedField.randomAdjacentLocation(getLocation());
+            Actor newHunter = new Hunter(getField(), loc);
+            newPredators.add(newHunter);
+            updatedField.place(this, loc);
+        }
+    }
+
+
+
     /**
      * A fox can breed if it has reached the breeding age.
      */
@@ -147,7 +163,7 @@ public class Hunter extends Predator {
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
         incrementAge();
         incrementHunger();
-        hunt(currentField, updateField, newActor);
+        hunt(updateField, newActor);
 
     }
 }

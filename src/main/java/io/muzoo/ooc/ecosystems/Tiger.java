@@ -33,10 +33,6 @@ public class Tiger extends Predator {
     // The tiger's food level, which is increased by eating foxes or rabbits.
     private int foodLevel;
 
-    public Tiger() {
-        super();
-        age =0;
-    }
 
     /**
      * Create a tiger. A tiger can be created as a new born (age zero
@@ -44,7 +40,8 @@ public class Tiger extends Predator {
      *
      * @param randomAge If true, the fox will have random age and hunger level.
      */
-    public Tiger(boolean randomAge) {
+    public Tiger(boolean randomAge, Field field, Location location) {
+        super(location, field);
         age = 0;
         if (randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -57,8 +54,18 @@ public class Tiger extends Predator {
         }
     }
 
+    @Override
+    public void giveBirth(Field updatedField, List<Actor> newPredators) {
+        int births = breed();
+        for (int b = 0; b < births; b++) {
 
 
+            Location loc = updatedField.randomAdjacentLocation(getLocation());
+            Actor newTiger = new Tiger(false, getField(), loc);
+            newPredators.add(newTiger);
+            updatedField.place(this, loc);
+        }
+    }
 
     /**
      * Increase the age. This could result in the tiger's death.
@@ -146,7 +153,7 @@ public class Tiger extends Predator {
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
         incrementAge();
         incrementHunger();
-        hunt(currentField, updateField, newActor);
+        hunt(updateField, newActor);
     }
 }
 

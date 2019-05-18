@@ -156,29 +156,22 @@ public class Simulator {
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
                 if (rand.nextDouble() <= HUNTER_CREATION_PROBABILITY) {
-                    Hunter hunter = new Hunter();
+                    Hunter hunter = new Hunter(field, new Location(row, col));
                     actors.add(hunter);
-                    hunter.setLocation(row, col);
                     field.place(hunter, row, col);
                 } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILITY) {
-                    Tiger tiger = new Tiger(true);
+                    Tiger tiger = new Tiger(true, field, new Location(row, col));
                     actors.add(tiger);
-                    tiger.setLocation(row, col);
                     field.place(tiger, row, col);
                 }
                 else if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    Fox fox = new Fox(true);
+                    Fox fox = new Fox(true, field, new Location(row, col));
                     actors.add(fox);
-                    fox.setLocation(row, col);
                     field.place(fox, row, col);
                 } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    Rabbit rabbit = new Rabbit(true);
+                    Rabbit rabbit = new Rabbit(true, field, new Location(row, col));
                     actors.add(rabbit);
-                    rabbit.setLocation(row, col);
                     field.place(rabbit, row, col);
-                }
-                else {
-
                 }
                 // else leave the location empty.
 
