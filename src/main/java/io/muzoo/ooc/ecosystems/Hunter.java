@@ -47,13 +47,6 @@ public class Hunter extends Predator {
     }
 
 
-    /**
-     * Increase the age. This could result in the fox's death.
-     */
-    private void incrementAge() {
-        setAge(getAge() + 1 );
-    }
-
 
     /**
      * Make this hunter more hungry. This could result in the others's death.
@@ -110,24 +103,12 @@ public class Hunter extends Predator {
         return null;
     }
 
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     *
-     * @return The number of births (may be zero).
-     */
-    protected int breed() {
-        int births = 0;
-        if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        return births;
-    }
+
 
 
     @Override
     public void giveBirth(Field updatedField, List<Actor> newPredators) {
-        int births = breed();
+        int births = breed(rand);
         for (int b = 0; b < births; b++) {
 
 
@@ -145,6 +126,15 @@ public class Hunter extends Predator {
         return BREEDING_AGE;
     }
 
+    @Override
+    protected int getMaxLitterSize() {
+        return MAX_LITTER_SIZE;
+    }
+
+    @Override
+    protected int getMaxAge() {
+        return MAX_AGE;
+    }
 
     /**
      * Check whether the fox is alive or not.

@@ -54,7 +54,7 @@ public class Rabbit extends Animal {
     public void run(Field updatedField, List<Actor> newRabbits) {
         incrementAge();
         if (isAlive()) {
-            int births = breed();
+            int births = breed(rand);
             for (int b = 0; b < births; b++) {
                 Location loc = updatedField.randomAdjacentLocation(getLocation());
                 Rabbit newRabbit = new Rabbit(false, getField(), loc);
@@ -73,29 +73,14 @@ public class Rabbit extends Animal {
         }
     }
 
-    /**
-     * Increase the age.
-     * This could result in the rabbit's death.
-     */
-    private void incrementAge() {
-        setAge(getAge() + 1 );
-        if (getAge() > MAX_AGE) {
-            setDead();
-        }
+    @Override
+    protected int getMaxLitterSize() {
+        return MAX_LITTER_SIZE;
     }
 
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     *
-     * @return The number of births (may be zero).
-     */
-    protected int breed() {
-        int births = 0;
-        if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        return births;
+    @Override
+    protected int getMaxAge() {
+        return MAX_AGE;
     }
 
     @Override

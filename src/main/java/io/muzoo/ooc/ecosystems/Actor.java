@@ -1,11 +1,43 @@
 package io.muzoo.ooc.ecosystems;
 
 import java.util.List;
+import java.util.Random;
 
 public abstract class Actor {
     private boolean alive;
     private Location location;
     private Field field;
+
+
+
+    /**
+     * Increase the age. This could result in the fox's death.
+     */
+    protected void incrementAge() {
+        setAge(getAge()+ 1);
+        if (getAge() > getMaxAge()) {
+            setDead();
+        }
+    }
+
+
+    /**
+     * Generate a number representing the number of births,
+     * if it can breed.
+     *
+     * @return The number of births (may be zero).
+     */
+    protected int breed(Random rand) {
+        int births = 0;
+        if (canBreed() && rand.nextDouble() <= getBreedingAge()) {
+            births = rand.nextInt(getMaxLitterSize()) + 1;
+        }
+        return births;
+    }
+
+    protected abstract int getMaxLitterSize();
+
+    protected abstract int getMaxAge();
 
 
     protected boolean canBreed() {

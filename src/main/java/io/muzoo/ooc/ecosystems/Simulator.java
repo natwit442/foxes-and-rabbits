@@ -147,6 +147,7 @@ public class Simulator {
 
         // Show the starting state in the view.
         view.showStatus(step, field);
+        view.printState(field);
     }
 
     /**
