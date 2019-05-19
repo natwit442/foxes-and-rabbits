@@ -19,14 +19,18 @@ public class Simulator {
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 10;
     // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.06;
-    // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.2;
-    // The probability that a tiger will be created in any given grid position
-    private static final double TIGER_CREATION_PROBABILITY = 0.1;
 
-    // The probability that a tiger will be created in any given grid position
-    private static final double HUNTER_CREATION_PROBABILITY = 0.001;
+
+    // A hashmap storing actor's creation probability
+    private static final Map<String, Double> CREATION_PROBABILITY = new HashMap<String, Double>(){
+        {
+            put("P_FOX", 0.03);
+            put("P_RABBIT", 0.5);
+            put("P_TIGER", 0.43);
+            put("P_HUNTER", 0.01);
+        }
+
+    };
 
     // The list of actor in the field
     private List<Actor> actors;
@@ -155,20 +159,20 @@ public class Simulator {
         field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                if (rand.nextDouble() <= HUNTER_CREATION_PROBABILITY) {
+                if (rand.nextDouble() <= CREATION_PROBABILITY.get("P_HUNTER")) {
                     Hunter hunter = new Hunter(field, new Location(row, col));
                     actors.add(hunter);
                     field.place(hunter, row, col);
-                } else if (rand.nextDouble() <= TIGER_CREATION_PROBABILITY) {
+                } else if (rand.nextDouble() <= CREATION_PROBABILITY.get("P_TIGER")) {
                     Tiger tiger = new Tiger(true, field, new Location(row, col));
                     actors.add(tiger);
                     field.place(tiger, row, col);
                 }
-                else if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
+                else if (rand.nextDouble() <= CREATION_PROBABILITY.get("P_FOX")) {
                     Fox fox = new Fox(true, field, new Location(row, col));
                     actors.add(fox);
                     field.place(fox, row, col);
-                } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
+                } else if (rand.nextDouble() <= CREATION_PROBABILITY.get("P_RABBIT")) {
                     Rabbit rabbit = new Rabbit(true, field, new Location(row, col));
                     actors.add(rabbit);
                     field.place(rabbit, row, col);

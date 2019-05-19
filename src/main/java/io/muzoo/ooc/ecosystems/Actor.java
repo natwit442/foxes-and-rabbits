@@ -1,12 +1,28 @@
 package io.muzoo.ooc.ecosystems;
 
-import java.beans.FeatureDescriptor;
 import java.util.List;
 
 public abstract class Actor {
     private boolean alive;
     private Location location;
     private Field field;
+
+
+    protected boolean canBreed() {
+        return age >= getBreedingAge();
+    }
+
+    protected abstract int getBreedingAge();
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    private int age;
 
 
     public Actor() {

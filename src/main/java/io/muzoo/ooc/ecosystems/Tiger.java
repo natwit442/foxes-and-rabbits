@@ -13,7 +13,7 @@ public class Tiger extends Predator {
     // The age at which a Tiger can start to breed.
     private static final int BREEDING_AGE = 10;
     // The age to which a tiger can live.
-    private static final int MAX_AGE = 200;
+    private static final int MAX_AGE = 500;
     // The likelihood of a tiger breeding.
     private static final double BREEDING_PROBABILITY = 0.12;
     // The maximum number of births.
@@ -27,8 +27,8 @@ public class Tiger extends Predator {
     private static final Random rand = new Random();
 
 
-    // The tiger's age.
-    private int age;
+
+
 
     // The tiger's food level, which is increased by eating foxes or rabbits.
     private int foodLevel;
@@ -42,9 +42,9 @@ public class Tiger extends Predator {
      */
     public Tiger(boolean randomAge, Field field, Location location) {
         super(location, field);
-        age = 0;
+        setAge(0);
         if (randomAge) {
-            age = rand.nextInt(MAX_AGE);
+            setAge(rand.nextInt(MAX_AGE));
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
 
 
@@ -67,12 +67,19 @@ public class Tiger extends Predator {
         }
     }
 
+
+    @Override
+    protected int getBreedingAge() {
+        return BREEDING_AGE;
+    }
+
+
     /**
      * Increase the age. This could result in the tiger's death.
      */
     private void incrementAge() {
-        age++;
-        if (age > MAX_AGE) {
+        setAge(getAge() + 1);
+        if (getAge() > MAX_AGE) {
             setAlive(false);
         }
     }
@@ -141,13 +148,6 @@ public class Tiger extends Predator {
         return births;
     }
 
-
-    /**
-     * A fox can breed if it has reached the breeding age.
-     */
-    private boolean canBreed() {
-        return age >= BREEDING_AGE;
-    }
 
     @Override
     public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {

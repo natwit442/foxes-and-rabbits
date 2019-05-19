@@ -29,8 +29,8 @@ public class Hunter extends Predator {
 
     // Individual characteristics (instance fields).
 
-    // The hunters's age.
-    private int age;
+
+
     // The hunter's food level, which is increased by eating others.
     private int foodLevel;
 
@@ -42,7 +42,7 @@ public class Hunter extends Predator {
 
     public Hunter(Field field, Location location) {
         super(location, field);
-        age = 0;
+        setAge(0);
         foodLevel = RABBIT_FOOD_VALUE + TIGER_FOOD_VALUE + FOX_FOOD_VALUE;
     }
 
@@ -51,7 +51,7 @@ public class Hunter extends Predator {
      * Increase the age. This could result in the fox's death.
      */
     private void incrementAge() {
-        age++;
+        setAge(getAge() + 1 );
     }
 
 
@@ -140,12 +140,11 @@ public class Hunter extends Predator {
 
 
 
-    /**
-     * A fox can breed if it has reached the breeding age.
-     */
-    private boolean canBreed() {
-        return age >= BREEDING_AGE;
+    @Override
+    protected int getBreedingAge() {
+        return BREEDING_AGE;
     }
+
 
     /**
      * Check whether the fox is alive or not.
