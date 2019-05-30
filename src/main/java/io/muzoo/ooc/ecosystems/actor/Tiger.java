@@ -1,4 +1,7 @@
-package io.muzoo.ooc.ecosystems;
+package io.muzoo.ooc.ecosystems.actor;
+
+import io.muzoo.ooc.ecosystems.field.Field;
+import io.muzoo.ooc.ecosystems.location.Location;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +16,7 @@ public class Tiger extends Predator {
     // The age at which a Tiger can start to breed.
     private static final int BREEDING_AGE = 10;
     // The age to which a tiger can live.
-    private static final int MAX_AGE = 500;
+    private static final int MAX_AGE = 150;
     // The likelihood of a tiger breeding.
     private static final double BREEDING_PROBABILITY = 0.12;
     // The maximum number of births.
@@ -27,31 +30,24 @@ public class Tiger extends Predator {
     private static final Random rand = new Random();
 
 
-
-
-
     // The tiger's food level, which is increased by eating foxes or rabbits.
     private int foodLevel;
 
 
-    /**
-     * Create a tiger. A tiger can be created as a new born (age zero
-     * and not hungry) or with random age.
-     *
-     * @param randomAge If true, the fox will have random age and hunger level.
-     */
-    public Tiger(boolean randomAge, Field field, Location location) {
-        super(location, field);
-        setAge(0);
-        if (randomAge) {
-            setAge(rand.nextInt(MAX_AGE));
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
+    public Tiger() {
+        super();
+        foodLevel = getFoodValue();
+    }
 
 
-        } else {
-            // Leave age at 0
-            foodLevel = RABBIT_FOOD_VALUE;
-        }
+    protected int getFoodValue() {
+        return RABBIT_FOOD_VALUE + FOX_FOOD_VALUE;
+    }
+
+
+    public void randomizeFoodValue() {
+        foodLevel = rand.nextInt(getFoodValue());
+
     }
 
     @Override
@@ -65,14 +61,15 @@ public class Tiger extends Predator {
     }
 
     @Override
-    public void giveBirth(Field updatedField, List<Actor> newPredators) {
-        int births = breed(rand);
+    public void giveBirth(Field updatedField, List<Actor> newTigers) {
+
+        int births = breed();
         for (int b = 0; b < births; b++) {
-
-
             Location loc = updatedField.randomAdjacentLocation(getLocation());
-            Actor newTiger = new Tiger(false, getField(), loc);
-            newPredators.add(newTiger);
+            Actor newTiger = ActorFactory.createActor(Tiger.class, false);
+            assert newTiger != null;
+            newTiger.setLocation(loc);
+            newTigers.add(newTiger);
             updatedField.place(this, loc);
         }
     }
@@ -84,13 +81,10 @@ public class Tiger extends Predator {
     }
 
 
-
-
-
     /**
      * Make this fox more hungry. This could result in the fox's death.
      */
-    private void incrementHunger() {
+    protected void incrementHunger() {
         foodLevel--;
         if (foodLevel <= 0) {
             setAlive(false);
@@ -98,19 +92,18 @@ public class Tiger extends Predator {
     }
 
 
-    /**
-     * Tell the tiger to look for rabbits or foxes adjacent to its current location.
-     *
-     * @param field    The field in which it must look.
-     * @param location Where in the field it is located.
-     * @return Where food was found, or null if it wasn't.
-     */
-    protected Location findFood(Field field, Location location) {
+    @Override
+    protected double getBreedingProb() {
+        return BREEDING_PROBABILITY;
+    }
+
+    protected Location findFood(Field currentField, Location location) {
+
         Iterator adjacentLocations =
-                field.adjacentLocations(location);
+                currentField.adjacentLocations(location);
         while (adjacentLocations.hasNext()) {
             Location where = (Location) adjacentLocations.next();
-            Actor actor = field.getActorAt(where);
+            Actor actor = currentField.getActorAt(where);
             boolean isRabbit = actor instanceof Rabbit;
             boolean isFox = actor instanceof Fox;
             if (isRabbit) {
@@ -136,13 +129,5 @@ public class Tiger extends Predator {
     }
 
 
-
-
-    @Override
-    public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
-        incrementAge();
-        incrementHunger();
-        hunt(updateField, newActor);
-    }
 }
 

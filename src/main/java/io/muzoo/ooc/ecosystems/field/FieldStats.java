@@ -1,4 +1,8 @@
-package io.muzoo.ooc.ecosystems;
+package io.muzoo.ooc.ecosystems.field;
+
+import io.muzoo.ooc.ecosystems.actor.Rabbit;
+import io.muzoo.ooc.ecosystems.counter.Counter;
+import io.muzoo.ooc.ecosystems.actor.Actor;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -76,6 +80,7 @@ public class FieldStats {
      * Indicate that an animal count has been completed.
      */
     public void countFinished() {
+
         countsValid = true;
     }
 

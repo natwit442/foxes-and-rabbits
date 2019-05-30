@@ -1,4 +1,8 @@
-package io.muzoo.ooc.ecosystems;
+package io.muzoo.ooc.ecosystems.simulator;
+
+import io.muzoo.ooc.ecosystems.field.Field;
+import io.muzoo.ooc.ecosystems.field.FieldStats;
+import io.muzoo.ooc.ecosystems.actor.Actor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +26,7 @@ public class SimulatorView extends JFrame {
     private static final Color UNKNOWN_COLOR = Color.gray;
 
     private final String STEP_PREFIX = "Step: ";
-    private final String POPULATION_PREFIX = "Population: ";
+    private final String POPULATION_PREFIX = "ActorFactory: ";
     private JLabel stepLabel, population;
     private FieldView fieldView;
 
@@ -84,8 +88,10 @@ public class SimulatorView extends JFrame {
      * @param field The field whose status is to be displayed.
      */
     public void showStatus(int step, Field field) {
+
         if (!isVisible())
             setVisible(true);
+
 
         stepLabel.setText(STEP_PREFIX + step);
         stats.reset();
@@ -103,7 +109,9 @@ public class SimulatorView extends JFrame {
                 }
             }
         }
+
         stats.countFinished();
+
 
         population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
         fieldView.repaint();

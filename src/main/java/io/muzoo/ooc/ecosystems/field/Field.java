@@ -1,4 +1,7 @@
-package io.muzoo.ooc.ecosystems;
+package io.muzoo.ooc.ecosystems.field;
+
+import io.muzoo.ooc.ecosystems.location.Location;
+import io.muzoo.ooc.ecosystems.actor.Actor;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -19,6 +22,8 @@ public class Field {
     private int depth, width;
     // Storage for the animals.
     private Actor[][] field;
+
+
 
     /**
      * Represent a field of the given dimensions.
@@ -42,6 +47,8 @@ public class Field {
             }
         }
     }
+
+
 
     /**
      * Place an animal at the given location.
@@ -169,6 +176,10 @@ public class Field {
         }
         Collections.shuffle(locations, rand);
         return locations.iterator();
+    }
+
+    public Actor[][] getField() {
+        return field;
     }
 
     /**

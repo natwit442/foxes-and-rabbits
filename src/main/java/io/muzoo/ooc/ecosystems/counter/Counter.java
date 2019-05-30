@@ -1,4 +1,4 @@
-package io.muzoo.ooc.ecosystems;
+package io.muzoo.ooc.ecosystems.counter;
 
 /**
  * Provide a counter for a participant in the simulation.

@@ -1,6 +1,8 @@
-package io.muzoo.ooc.ecosystems;
+package io.muzoo.ooc.ecosystems.actor;
 
 
+import io.muzoo.ooc.ecosystems.field.Field;
+import io.muzoo.ooc.ecosystems.location.Location;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,11 +21,11 @@ public class Fox extends Predator {
     // Characteristics shared by all foxes (static fields).
     // The age at which a fox can start to breed.
 
-    private static final int BREEDING_AGE = 5;
+    private static final int BREEDING_AGE = 10;
     // The age to which a fox can live.
     private static final int MAX_AGE = 150;
     // The likelihood of a fox breeding.
-    private static final double BREEDING_PROBABILITY = 0.5;
+    private static final double BREEDING_PROBABILITY = 0.2;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 7;
     // The food value of a single rabbit. In effect, this is the
@@ -38,28 +40,25 @@ public class Fox extends Predator {
     // The fox's food level, which is increased by eating rabbits.
     private int foodLevel;
 
+    public Fox() {
+        super();
+        foodLevel = getFoodValue();
 
-
-    /**
-     * Create a fox. A fox can be created as a new born (age zero
-     * and not hungry) or with random age.
-     *
-     * @param randomAge If true, the fox will have random age and hunger level.
-     */
-
-
-
-    public Fox(boolean randomAge, Field field , Location location) {
-        super(location, field);
-        setAge(0);
-        if (randomAge) {
-            setAge(rand.nextInt(MAX_AGE));
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
-        } else {
-            foodLevel = RABBIT_FOOD_VALUE;
-        }
     }
 
+    @Override
+    protected double getBreedingProb() {
+        return BREEDING_PROBABILITY;
+    }
+
+
+    protected int getFoodValue() {
+        return RABBIT_FOOD_VALUE;
+    }
+
+    public void randomizeFoodValue() {
+        foodLevel = rand.nextInt(getFoodValue());
+    }
 
 
     @Override
@@ -70,33 +69,34 @@ public class Fox extends Predator {
     /**
      * Make this fox more hungry. This could result in the fox's death.
      */
-    private void incrementHunger() {
+    protected void incrementHunger() {
         foodLevel--;
         if (foodLevel <= 0) {
 
-            setAlive(false);
+            setDead();
         }
     }
 
     /**
      * Tell the fox to look for rabbits adjacent to its current location.
      *
-     * @param field    The field in which it must look.
-     * @param location Where in the field it is located.
+     * @param currentField
+     * @param location     Where in the field it is located.
      * @return Where food was found, or null if it wasn't.
      */
-    protected Location findFood(Field field, Location location) {
-        Iterator<Location> adjacentLocations =
-                field.adjacentLocations(location);
+    protected Location findFood(Field currentField, Location location) {
+
+        Iterator<Location> adjacentLocations = currentField.adjacentLocations(location);
+
         while (adjacentLocations.hasNext()) {
             Location where = adjacentLocations.next();
-            Actor actor = field.getActorAt(where);
+            Actor actor = currentField.getActorAt(where);
 
             if (actor instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) actor;
                 if (rabbit.isAlive()) {
                     rabbit.setDead();
-                    foodLevel = RABBIT_FOOD_VALUE;
+                    foodLevel = getFoodValue();
                     return where;
                 }
             }
@@ -104,15 +104,15 @@ public class Fox extends Predator {
         return null;
     }
 
-
-
-
     @Override
     public void giveBirth(Field updatedField, List<Actor> newPredators) {
-        int births = breed(rand);
+
+        int births = breed();
         for (int b = 0; b < births; b++) {
             Location loc = updatedField.randomAdjacentLocation(getLocation());
-            Actor newFox = new Fox(false, getField(), loc);
+            Actor newFox = ActorFactory.createActor(Fox.class, false);
+            assert newFox != null;
+            newFox.setLocation(loc);
             newPredators.add(newFox);
             updatedField.place(this, loc);
         }
@@ -129,19 +129,12 @@ public class Fox extends Predator {
         return MAX_LITTER_SIZE;
     }
 
-    /**
-     * Check whether the fox is alive or not.
-     *
-     * @return True if the fox is still alive.
-     */
-
-
 
     @Override
-    public void makeAction(Field currentField, Field updateField, List<Actor> newActor) {
+    public void makeAction(Field updatedField, Field currentField, List<Actor> newActor) {
         incrementAge();
         incrementHunger();
-        hunt(updateField, newActor);
+        hunt(updatedField, currentField, newActor);
 
     }
 
